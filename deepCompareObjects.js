@@ -8,21 +8,26 @@
 */
 function deepCompareObjects(a, b) {
     return (a === b) ? true : (function() {
-        String.prototype.repAll = function(str, rep) {
-            var r = new RegExp(str,"g");
-            return this.replace(r, rep);
-        };
-        var rawA = getRaw(a);
-        var rawB = getRaw(b);
-        function getRaw(obj) {
-            try {
-                var json = JSON.stringify(obj) || "";
-                json = json.repAll("{", "^").repAll(",", "^").repAll("}", "^").repAll(":", "^");
-                return json.split("^").sort().join("^");
-            } catch (exjs) {
-                return false;
-            }
+        function objType(obj) {
+            return Object.prototype.toString.call(obj);
         }
-        return rawA === rawB;
+        return (objType(a) !== objType(b)) ? false : (function() {
+            String.prototype.repAll = function(str, rep) {
+                var r = new RegExp(str,"g");
+                return this.replace(r, rep);
+            };
+            var rawA = getRaw(a);
+            var rawB = getRaw(b);
+            function getRaw(obj) {
+                try {
+                    var json = JSON.stringify(obj) || "";
+                    json = json.repAll("{", "^").repAll(",", "^").repAll("}", "^").repAll(":", "^");
+                    return json.split("^").sort().join("^");
+                } catch (exjs) {
+                    return false;
+                }
+            }
+            return rawA === rawB;
+        }());
     }());
 }
