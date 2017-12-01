@@ -7,20 +7,22 @@
 * Author: kcak11 --> github.com/kcak11
 */
 function deepCompareObjects(a, b) {
-    if (!(a && b)) {
-        return false;
-    }
     return (a === b) ? true : (function() {
         String.prototype.repAll = function(str, rep) {
             var r = new RegExp(str,"g");
             return this.replace(r, rep);
-        };
+        }
+        ;
         var rawA = getRaw(a);
         var rawB = getRaw(b);
         function getRaw(obj) {
-            var json = JSON.stringify(obj);
-            json = json.repAll("{", "^").repAll(",", "^").repAll("}", "^").repAll(":", "^");
-            return json.split("^").sort().join("^");
+            try {
+                var json = JSON.stringify(obj) || "";
+                json = json.repAll("{", "^").repAll(",", "^").repAll("}", "^").repAll(":", "^");
+                return json.split("^").sort().join("^");
+            } catch (exjs) {
+                return false;
+            }
         }
         return rawA === rawB;
     }());
