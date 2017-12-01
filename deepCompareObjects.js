@@ -11,8 +11,7 @@ function deepCompareObjects(a, b) {
         String.prototype.repAll = function(str, rep) {
             var r = new RegExp(str,"g");
             return this.replace(r, rep);
-        }
-        ;
+        };
         var rawA = getRaw(a);
         var rawB = getRaw(b);
         function getRaw(obj) {
